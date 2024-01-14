@@ -16,8 +16,9 @@ public class ManageScript : MonoBehaviour
     public GameObject check_image;
     public GameObject[] squares;
     public bool first_click;
+    public int Generation;
 
-    void Update()
+    void FixedUpdate()
     {
         if(first_click == true & automation == true)
         {
@@ -73,9 +74,11 @@ public class ManageScript : MonoBehaviour
             check_image.SetActive(true);
         }
     }
-    IEnumerator waiter()
+    IEnumerator waiters()
     {
-        yield return new WaitForSeconds(0.1f);
+        Generation++;
+        Debug.Log("Generation:" + Generation.ToString());
+        yield return new WaitForSeconds(1);
     }
     public void round()
     {
@@ -88,7 +91,18 @@ public class ManageScript : MonoBehaviour
         {
             squares[i].GetComponent<Square>().round_squ();
         }
-        StartCoroutine(waiter());
+        //StartCoroutine(waiters());
+    }
+    public void calculate_first_neighbours()
+    {
+        for (int i = 0; i < squares.Length; i++)
+        {
+            squares[i].GetComponent<Square>().count_neighbours_first();
+        }
+        for (int i = 0; i < squares.Length; i++)
+        {
+            squares[i].GetComponent<Square>().count_neighbours();
+        }
     }
     public void check_squares()
     {

@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public class Square : MonoBehaviour
 {
     public bool alive = false;
     public int neighbours_ = 0;
     public string next_round = "nothing";
+    public List<GameObject> neighbours_eight;
 
     void Start()
     {
@@ -18,25 +20,33 @@ public class Square : MonoBehaviour
     { 
         
     }
-    public int count_neighbours()
+    public void count_neighbours_first()
     {
         GameObject[] squares = GameObject.FindGameObjectsWithTag("square");
-        int neighbours = 0;
-        for(int i = 0; i < squares.Length; i++)
+        for (int i = 0; i < squares.Length; i++)
         {
             float margin_y = Mathf.Max(squares[i].transform.position.y, transform.position.y) - Mathf.Min(squares[i].transform.position.y, transform.position.y);
             float margin_x = Mathf.Max(squares[i].transform.position.x, transform.position.x) - Mathf.Min(squares[i].transform.position.x, transform.position.x);
-            if (((margin_y == 1f & margin_x == 1f) | (margin_y == 1f & margin_x == 0f) | (margin_y == 0f & margin_x == 1f)) & squares[i].GetComponent<Square>().alive == true)
+            if ((margin_y == 1f & margin_x == 1f) | (margin_y == 1f & margin_x == 0f) | (margin_y == 0f & margin_x == 1f))
+            {
+                neighbours_eight.Add(squares[i]);
+            }
+        }
+    }
+    public int count_neighbours()
+    {
+        int neighbours = 0;
+        for(int i = 0; i < neighbours_eight.Count; i++)
+        {
+            //float margin_y = Mathf.Max(neighbours_eight[i].transform.position.y, transform.position.y) - Mathf.Min(neighbours_eight[i].transform.position.y, transform.position.y);
+            //float margin_x = Mathf.Max(neighbours_eight[i].transform.position.x, transform.position.x) - Mathf.Min(neighbours_eight[i].transform.position.x, transform.position.x);
+            if (neighbours_eight[i].GetComponent<Square>().alive == true)
             {
                 neighbours++;
             }
             
             
         }
-        //if (alive == true)
-        //{
-        //    neighbours--;
-        //}
         return (neighbours);
     }
     public void check_alive()
